@@ -12,7 +12,7 @@ import (
 
 const baseURl = "https://www.do.de/api"
 
-type ApiResponse struct {
+type APIResponse struct {
 	Domain  *string `json:"domain"`
 	Success *bool   `json:"success"`
 	Error   *string `json:"error"`
@@ -39,9 +39,8 @@ func (p *Provider) createACMERecord(ctx context.Context, domain string, value st
 		return err
 	}
 
-	var apiResponse ApiResponse
-	decoder := json.NewDecoder(resp.Body)
-	err = decoder.Decode(&apiResponse)
+	var apiResponse APIResponse
+	err = json.NewDecoder(resp.Body).Decode(&apiResponse)
 	if err != nil {
 		return err
 	}
@@ -77,7 +76,7 @@ func (p *Provider) deleteACMERecord(ctx context.Context, domain string) error {
 		return err
 	}
 
-	var apiResponse ApiResponse
+	var apiResponse APIResponse
 	decoder := json.NewDecoder(resp.Body)
 	err = decoder.Decode(&apiResponse)
 	if err != nil {
@@ -85,7 +84,7 @@ func (p *Provider) deleteACMERecord(ctx context.Context, domain string) error {
 	}
 
 	if apiResponse.Error != nil {
-		return fmt.Errorf(*apiResponse.Error)
+		return fmt.Errorf("API error: %v", *apiResponse.Error)
 	}
 	if apiResponse.Success == nil || !*apiResponse.Success {
 		return fmt.Errorf("creating the ACME record was not successfull")

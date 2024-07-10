@@ -20,13 +20,6 @@ type Provider struct {
 const notSupportedErrorMsg = "the do.de API only supports creating and removing TXT records for domains starting with '_acme-challenge.'"
 const acmeChallenge = "_acme-challenge."
 
-// GetRecords lists all the records in the zone.
-//
-// This is unsupported by the do.de API.
-func (p *Provider) GetRecords(ctx context.Context, zone string) ([]libdns.Record, error) {
-	return nil, fmt.Errorf(notSupportedErrorMsg)
-}
-
 // AppendRecords adds records to the zone. It returns the records that were added.
 //
 // The do.de API only supports creating TXT records that start with `_acme-challenge.`.
@@ -45,14 +38,6 @@ func (p *Provider) AppendRecords(ctx context.Context, zone string, records []lib
 
 	return records, nil
 
-}
-
-// SetRecords sets the records in the zone, either by updating existing records or creating new ones.
-// It returns the updated records.
-//
-// The do.de API only supports creating TXT records that start with `_acme-challenge.`.
-func (p *Provider) SetRecords(ctx context.Context, zone string, records []libdns.Record) ([]libdns.Record, error) {
-	return p.AppendRecords(ctx, zone, records)
 }
 
 // DeleteRecords deletes the records from the zone. It returns the records that were deleted.
@@ -75,8 +60,6 @@ func (p *Provider) DeleteRecords(ctx context.Context, zone string, records []lib
 
 // Interface guards
 var (
-	_ libdns.RecordGetter   = (*Provider)(nil)
 	_ libdns.RecordAppender = (*Provider)(nil)
-	_ libdns.RecordSetter   = (*Provider)(nil)
 	_ libdns.RecordDeleter  = (*Provider)(nil)
 )
