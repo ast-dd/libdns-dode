@@ -18,7 +18,7 @@ type Provider struct {
 }
 
 const notSupportedErrorMsg = "the do.de API only supports creating and removing TXT records for domains starting with '_acme-challenge.'"
-const acmeChallenge = "_acme-challenge."
+const acmeChallenge = "_acme-challenge"
 
 // AppendRecords adds records to the zone. It returns the records that were added.
 //
