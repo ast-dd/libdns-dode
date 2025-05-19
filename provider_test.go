@@ -15,10 +15,10 @@ var (
 	apiToken    = ""
 	zone        = ""
 	testRecords = []libdns.Record{
-		{
-			Type:  "TXT",
-			Name:  "_acme-challenge.test",
-			Value: "foo",
+		libdns.RR{
+			Type: "TXT",
+			Name: "_acme-challenge.test",
+			Data: "foo",
 		},
 	}
 )
