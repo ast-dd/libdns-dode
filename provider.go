@@ -24,13 +24,14 @@ const acmeChallenge = "_acme-challenge"
 //
 // The do.de API only supports creating TXT records that start with `_acme-challenge.`.
 func (p *Provider) AppendRecords(ctx context.Context, zone string, records []libdns.Record) ([]libdns.Record, error) {
-	for _, rec := range records {
+	for _, record := range records {
+		rec := record.RR()
 		if rec.Type != "TXT" || !strings.HasPrefix(rec.Name, acmeChallenge) {
 			return nil, fmt.Errorf(notSupportedErrorMsg)
 		}
 
 		name := libdns.AbsoluteName(rec.Name, zone)
-		err := p.createACMERecord(ctx, strings.TrimSuffix(name, "."), rec.Value)
+		err := p.createACMERecord(ctx, strings.TrimSuffix(name, "."), rec.Data)
 		if err != nil {
 			return nil, err
 		}
@@ -44,7 +45,8 @@ func (p *Provider) AppendRecords(ctx context.Context, zone string, records []lib
 //
 // The do.de API only supports deleting TXT records that start with `_acme-challenge.`.
 func (p *Provider) DeleteRecords(ctx context.Context, zone string, records []libdns.Record) ([]libdns.Record, error) {
-	for _, rec := range records {
+	for _, record := range records {
+		rec := record.RR()
 		if rec.Type != "TXT" || !strings.HasPrefix(rec.Name, acmeChallenge) {
 			return nil, fmt.Errorf(notSupportedErrorMsg)
 		}
